@@ -1,32 +1,21 @@
-package org.redcenter.export.test;
-
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.redcenter.export.ExcelExporter;
-import org.redcenter.export.IExporter;
+package org.redcenter.export;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.Assert;
+import org.junit.Test;
+import org.redcenter.export.entity.JpaEntity;
 
-/**
- * Hello world!
- *
- */
-public class App
+public class ExcelExporterTest
 {
-    private static final int MAX_ROW_IN_MEM = 1000;
 
-    public static void main(String[] args)
+    @Test
+    public void testExoprt()
     {
+//        Assert.fail("Not yet implemented");
         try
         {
             exportExcel();
@@ -39,7 +28,7 @@ public class App
         System.out.println("End");
     }
 
-    private static void exportExcel() throws IOException
+    private void exportExcel() throws IOException
     {
 //        Workbook wb = new SXSSFWorkbook(MAX_ROW_IN_MEM);
 //        Sheet sheet = wb.createSheet();

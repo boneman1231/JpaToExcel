@@ -1,4 +1,4 @@
-package org.redcenter.export.test;
+package org.redcenter.export.entity;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;

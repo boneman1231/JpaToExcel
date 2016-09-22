@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class ExcelExporter implements IExporter
 {
-    protected static final int MAX_ROW_IN_MEM = 1000;
+    protected static final int MAX_ROW_IN_MEM = 100;
     protected Logger logger = LoggerFactory.getLogger(getClass());
     protected OutputStream os;
     protected Workbook wb;
