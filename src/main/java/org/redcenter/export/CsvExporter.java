@@ -2,80 +2,74 @@ package org.redcenter.export;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.redcenter.export.api.IExporter;
+import org.redcenter.export.filter.ExcelVo;
 
 /**
- * TODO
+ * 
  * @author boneman
  *
+ * @param <T>
  */
-public class CsvExporter implements IExporter
+public class CsvExporter<T> extends AbstractExporter<T> implements IExporter<T>
 {
     protected static final int MAX_ROW_IN_MEM = 1000;
-    protected Logger logger = LoggerFactory.getLogger(getClass());
-    protected OutputStream os;
-    protected int line = 0;
-    protected LinkedHashMap<String, Field> map = null;
+    protected static final String newline = "\n\r"; //TODO
 
     public CsvExporter(File file) throws FileNotFoundException
     {
-        os = new FileOutputStream(file);
+        super(file);
     }
 
-    /**
-     * Write records with header.
-     */
-    public void exoprt(List<?> records) throws IOException, IllegalArgumentException, IllegalAccessException
+    @Override
+    protected void export(List<T> records, boolean includeHeader, ExcelVo vo)
+            throws IOException, IllegalArgumentException, IllegalAccessException
     {
-        if (records == null || records.size() == 0)
+        // create header
+        if (includeHeader)
         {
-            return;
-        }
-
-        // prepare columns
-        Class<?> clazz = records.get(0).getClass();
-        IFieldFilter filter = new JpaFieldFilter();
-        map = filter.getFieldMap(clazz);
-
-        // create header with bold font
-
-        // create values
-
-        // write to file
-    }
-
-    /**
-     * Write records without header.
-     * Need to execute export() first.
-     */
-    public void append(List<?> records) throws Exception
-    {
-        if (records == null || records.size() == 0)
-        {
-            return;
-        }
-
-        // prepare columns
-        if (map == null)
-        {
-            throw new Exception("Please execute export() first.");
+            createHeader();
         }
 
         // create values
+        createValue(records);
 
         // write to file
+        // TODO
     }
 
-    public void close() throws IOException
+    private void createHeader()
     {
-        os.close();
+//        Row row = sheet.createRow(line++);
+        for (Entry<String, Field> entry : map.entrySet())
+        {
+            //TODO
+        }
+    }
+    
+    private void createValue(List<T> records) throws IllegalAccessException
+    {
+        for (Object record : records)
+        {
+//            Row row = sheet.createRow(line++);
+            for (Entry<String, Field> entry : map.entrySet())
+            {
+                Field field = entry.getValue();
+                field.setAccessible(true);
+                Object value = field.get(record);
+                if (value == null)
+                {                    
+                    // avoid NullPointerException for value.toString()
+                    value = "";
+                }
+//                cell.setCellValue(value.toString());
+                //TODO
+            }
+        }   
     }
 }

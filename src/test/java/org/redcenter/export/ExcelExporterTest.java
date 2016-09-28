@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
+import org.redcenter.export.api.IExporter;
 import org.redcenter.export.entity.JpaEntity;
+import org.redcenter.export.filter.JpaFieldFilter;
 
 public class ExcelExporterTest
 {
@@ -49,10 +50,10 @@ public class ExcelExporterTest
         list.add(entity);
 
         File file = new File("test.xlsx");
-        IExporter exporter = new ExcelExporter(file );
+        IExporter<JpaEntity> exporter = new ExcelExporter<JpaEntity>(file );
         try
         {
-            exporter.exoprt(list);
+            exporter.export(list, true, new JpaFieldFilter());
             exporter.close();
         }
         catch (IllegalArgumentException e)
@@ -63,5 +64,10 @@ public class ExcelExporterTest
         {
             e.printStackTrace();
         }
+    }
+    
+    @Test
+    public void testExoprtWithMassData(){
+        //TODO
     }
 }

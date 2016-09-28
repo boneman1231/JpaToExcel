@@ -1,39 +1,55 @@
-package org.redcenter.export;
+package org.redcenter.export.filter;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 
-import org.redcenter.export.annotation.ExcelColumn;
-import org.redcenter.export.annotation.ExcelSheet;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
 
-//TODO
-public class CustFieldFilter2
+import org.redcenter.export.api.IFieldFilter;
+
+public class JpaFieldFilter implements IFieldFilter
 {
     public ExcelVo getExcelVo(Class<?> clazz)
     {
-        //sheet
+        ExcelVo vo = new ExcelVo();
+
+        // setup sheet name
         String sheetName = clazz.getSimpleName();
-        ExcelSheet classAnnotation = clazz.getAnnotation(ExcelSheet.class);
-        if (classAnnotation != null && classAnnotation.name()!=null && !classAnnotation.name().isEmpty())
+        Entity classAnnotation = clazz.getAnnotation(Entity.class);
+        if (classAnnotation == null)
+        {
+            // skip non JPA Entity classes
+            return null;
+        }
+        if (classAnnotation.name() != null && !classAnnotation.name().isEmpty())
         {
             sheetName = classAnnotation.name();
         }
-        
-        // columns
-        LinkedHashMap<String, Field> map = new LinkedHashMap<String, Field>();
+        vo.setSheetName(sheetName);
 
+        // setup columns
+        setupColumns(clazz, vo);
+
+        return vo;
+    }
+
+    private void setupColumns(Class<?> clazz, ExcelVo vo)
+    {
+        LinkedHashMap<String, Field> map = new LinkedHashMap<String, Field>();
         Class<?> superClass = clazz;
         do
         {
             // skip non JPA classes
-            if (clazz.getAnnotation(ExcelSheet.class) == null)
+            if (clazz.getAnnotation(MappedSuperclass.class) == null)
             {
                 continue;
             }
 
             for (Field field : superClass.getDeclaredFields())
             {
-                ExcelColumn columnAnnotation = field.getAnnotation(ExcelColumn.class);
+                Column columnAnnotation = field.getAnnotation(Column.class);
                 if (columnAnnotation != null)
                 {
                     // get name by annotation
@@ -41,6 +57,7 @@ public class CustFieldFilter2
                     if (name == null || name.isEmpty())
                     {
                         name = field.getName();
+                        // make first char upper-case
                         name = name.substring(0, 1).toUpperCase() + name.substring(1);
                     }
                     else
@@ -53,6 +70,7 @@ public class CustFieldFilter2
             superClass = superClass.getSuperclass();
         }
         while (superClass != null);
-        return null;
+        
+        vo.setColumnMap(map);
     }
 }
