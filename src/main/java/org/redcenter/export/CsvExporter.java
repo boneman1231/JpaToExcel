@@ -18,8 +18,8 @@ import org.redcenter.export.filter.ExcelVo;
  */
 public class CsvExporter<T> extends AbstractExporter<T> implements IExporter<T>
 {
-    protected static final int MAX_ROW_IN_MEM = 1000;
-    protected static final String newline = "\r\n"; //TODO
+    protected static final String NEW_LINE = "\r\n";
+    protected static final String SEPARATOR = ",";
 
     public CsvExporter(File file) throws FileNotFoundException
     {
@@ -28,48 +28,50 @@ public class CsvExporter<T> extends AbstractExporter<T> implements IExporter<T>
 
     @Override
     protected void export(List<T> records, boolean includeHeader, ExcelVo vo)
-            throws IOException, IllegalArgumentException, IllegalAccessException
+            throws IOException, IllegalAccessException
     {
+        StringBuilder sb = new StringBuilder();
+
         // create header
         if (includeHeader)
         {
-            createHeader();
+            createHeader(sb);
         }
 
         // create values
-        createValue(records);
+        createValue(records, sb);
 
-        // write to file
-        // TODO
+        // write to file        
+        os.write(sb.toString().getBytes());
     }
 
-    private void createHeader()
+    private void createHeader(StringBuilder sb)
     {
-//        Row row = sheet.createRow(line++);
         for (Entry<String, Field> entry : map.entrySet())
         {
-            //TODO
+            sb.append(entry.getKey() + SEPARATOR);
         }
+        sb.append(NEW_LINE);
+        line++;
     }
-    
-    private void createValue(List<T> records) throws IllegalAccessException
+
+    private void createValue(List<T> records, StringBuilder sb) throws IllegalAccessException
     {
         for (Object record : records)
         {
-//            Row row = sheet.createRow(line++);
             for (Entry<String, Field> entry : map.entrySet())
             {
                 Field field = entry.getValue();
-                field.setAccessible(true);
                 Object value = field.get(record);
                 if (value == null)
-                {                    
+                {
                     // avoid NullPointerException for value.toString()
                     value = "";
                 }
-//                cell.setCellValue(value.toString());
-                //TODO
+                sb.append(value + SEPARATOR);
             }
-        }   
+            sb.append(NEW_LINE);
+            line++;
+        }
     }
 }
