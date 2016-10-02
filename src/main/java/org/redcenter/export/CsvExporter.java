@@ -19,7 +19,7 @@ import org.redcenter.export.filter.ExcelVo;
 public class CsvExporter<T> extends AbstractExporter<T> implements IExporter<T>
 {
     protected static final int MAX_ROW_IN_MEM = 1000;
-    protected static final String newline = "\n\r"; //TODO
+    protected static final String newline = "\r\n"; //TODO
 
     public CsvExporter(File file) throws FileNotFoundException
     {

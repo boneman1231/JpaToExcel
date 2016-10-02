@@ -1,15 +1,18 @@
 package org.redcenter.export.entity;
 
+import javax.persistence.Entity;
+
 import org.redcenter.export.annotation.ExcelColumn;
 import org.redcenter.export.annotation.ExcelSheet;
 
 @ExcelSheet
+@Entity
 public class CustEntity
 {
-    @ExcelColumn(order = 1)
+    @ExcelColumn(order = 2)
     private String key;
 
-    @ExcelColumn(name = "theName", order = 2)
+    @ExcelColumn(name = "theValue", order = 1)
     private String value;
 
     @ExcelColumn

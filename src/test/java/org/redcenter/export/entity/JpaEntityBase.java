@@ -10,8 +10,8 @@ public class JpaEntityBase
     @Column
     private String key;
     private String value;
-    
-    @Column(name ="test_column")
+
+    @Column(name = "test_column")
     private String testColumn;
 
     public String getKey()
@@ -32,5 +32,15 @@ public class JpaEntityBase
     public void setValue(String value)
     {
         this.value = value;
+    }
+
+    public String getTestColumn()
+    {
+        return testColumn;
+    }
+
+    public void setTestColumn(String testColumn)
+    {
+        this.testColumn = testColumn;
     }
 }

@@ -42,8 +42,9 @@ public class JpaFieldFilter implements IFieldFilter
         do
         {
             // skip non JPA classes
-            if (clazz.getAnnotation(MappedSuperclass.class) == null)
+            if (!clazz.isAnnotationPresent(Entity.class) && !clazz.isAnnotationPresent(MappedSuperclass.class))
             {
+                superClass = superClass.getSuperclass();
                 continue;
             }
 
@@ -62,8 +63,11 @@ public class JpaFieldFilter implements IFieldFilter
                     }
                     else
                     {
-                        name = name.toUpperCase();
+                        // upper case for column name
+//                        name = name.toUpperCase();
                     }
+                    
+                    field.setAccessible(true);
                     map.put(name, field);
                 }
             }

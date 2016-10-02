@@ -49,7 +49,7 @@ public class CustFieldFilter implements IFieldFilter
         do
         {
             for (Field field : superClass.getDeclaredFields())
-            {
+            {   
                 addExcelColumnVo(columnVoList, field);
             }
 
@@ -70,6 +70,8 @@ public class CustFieldFilter implements IFieldFilter
         {
             map.put(excelColumnVo.getName(), excelColumnVo.getFiedl());
         }
+        
+        vo.setColumnMap(map);
     }
 
     private void addExcelColumnVo(List<ExcelColumnVo> columnVoList, Field field)
@@ -86,7 +88,7 @@ public class CustFieldFilter implements IFieldFilter
             }
             else
             {
-                name = name.toUpperCase();
+//                name = name.toUpperCase();
             }
 
             // get order by annotation
@@ -96,6 +98,7 @@ public class CustFieldFilter implements IFieldFilter
             ExcelColumnVo columnVo = new ExcelColumnVo();
             columnVo.setName(name);
             columnVo.setOrder(order);
+            field.setAccessible(true);
             columnVo.setFiedl(field);
             columnVoList.add(columnVo);
         }

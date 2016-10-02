@@ -43,13 +43,23 @@ public abstract class AbstractExporter<T> implements IExporter<T>
         {
             return;
         }
+        if (filter == null)
+        {
+            filter = new CustFieldFilter();
+        }
 
-        // prepare columns by fields 
+        // prepare columns by fields
         Class<?> clazz = records.get(0).getClass();
         // map = filter.getFieldMap(clazz);
         ExcelVo vo = filter.getExcelVo(clazz);
+        if (vo == null)
+        {
+            // write empty excel file
+            vo = new ExcelVo();
+            vo.setColumnMap(new LinkedHashMap<String, Field>());
+        }
         map = vo.getColumnMap();
-        
+
         // start to process
         export(records, includeHeader, vo);
     }

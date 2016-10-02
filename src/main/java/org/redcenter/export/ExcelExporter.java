@@ -41,7 +41,7 @@ public class ExcelExporter<T> extends AbstractExporter<T> implements IExporter<T
     {
         // create sheet 
         String sheetName = vo.getSheetName();
-        if (sheetName == null | sheetName.isEmpty())
+        if (sheetName == null || sheetName.isEmpty())
         {
             Class<?> clazz = records.get(0).getClass();
             sheetName = clazz.getSimpleName();
@@ -88,8 +88,7 @@ public class ExcelExporter<T> extends AbstractExporter<T> implements IExporter<T
             for (Entry<String, Field> entry : map.entrySet())
             {
                 Cell cell = row.createCell(colIndex++);
-                Field field = entry.getValue();
-                field.setAccessible(true);
+                Field field = entry.getValue();                
                 Object value = field.get(record);
                 if (value == null)
                 {                    
