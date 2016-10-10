@@ -26,7 +26,7 @@ import org.redcenter.export.filter.ExcelVo;
  */
 public class ExcelExporter<T> extends AbstractExporter<T> implements IExporter<T>
 {    
-    protected static final int MAX_ROW_IN_MEM = 100;
+    public static final int MAX_ROW_IN_MEM = 100;
     protected Workbook wb;
  
     public ExcelExporter(File file) throws FileNotFoundException 

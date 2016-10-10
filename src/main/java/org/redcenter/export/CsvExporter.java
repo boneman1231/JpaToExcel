@@ -18,8 +18,8 @@ import org.redcenter.export.filter.ExcelVo;
  */
 public class CsvExporter<T> extends AbstractExporter<T> implements IExporter<T>
 {
-    protected static final String NEW_LINE = "\r\n";
-    protected static final String SEPARATOR = ",";
+    public static final String NEW_LINE = "\r\n";
+    public static final String SEPARATOR = ",";
 
     public CsvExporter(File file) throws FileNotFoundException
     {

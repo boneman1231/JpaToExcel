@@ -1,69 +1,46 @@
 package org.redcenter.export;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.redcenter.export.api.IExporter;
-import org.redcenter.export.api.IFieldFilter;
-import org.redcenter.export.entity.CustEntity;
-import org.redcenter.export.entity.JpaEntity;
-import org.redcenter.export.filter.CustFieldFilter;
-import org.redcenter.export.filter.JpaFieldFilter;
 
-public class ExcelExporterTest
+public class ExcelExporterTest extends ExporterTest
 {
-
-    @Test
-    public void testJpaExoprt()
-    {
-        // Assert.fail("Not yet implemented");
-        JpaEntity entity = new JpaEntity();
-        entity.setKey("k");
-        entity.setName("n");
-        entity.setValue("v");
-        entity.setTestColumn("test");
-        List<JpaEntity> list = new ArrayList<JpaEntity>();
-        list.add(entity);
-        
-        export(list, "testJpa.xlsx", new JpaFieldFilter());
+    private static final String TEST_JPA_FILE_NAME = "testJpa.xlsx";
+    private static final String TEST_CUST_FILE_NAME = "testCust.xlsx";
+    
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception {
+        new File(TEST_JPA_FILE_NAME).deleteOnExit();
+        new File(TEST_CUST_FILE_NAME).deleteOnExit();
     }
 
     @Test
-    public void testCustExoprt()
+    public void testJpaExport() throws IllegalArgumentException, IllegalAccessException, IOException
     {
         // Assert.fail("Not yet implemented");
-        CustEntity entity = new CustEntity();
-        entity.setKey("k");
-        entity.setName("n");
-        entity.setValue("v");
-        List<CustEntity> list = new ArrayList<CustEntity>();
-        list.add(entity);
-        
-        export(list, "testCust.xlsx", new CustFieldFilter());
+        testJpaExport(TEST_JPA_FILE_NAME);
     }
 
-    private <T> void export(List<T> list, String fileName, IFieldFilter filter)
+    @Test
+    public void testCustExport() throws IllegalArgumentException, IllegalAccessException, IOException
     {
-        try
-        {
-            File file = new File(fileName);
-            IExporter<T> exporter = new ExcelExporter<T>(file);
-            exporter.export(list, true, filter);
-            exporter.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        System.out.println("End");
-    }
+        // Assert.fail("Not yet implemented");
+        testCustExport(TEST_CUST_FILE_NAME);
+    } 
 
     @Test
     public void testExoprtWithMassData()
     {
         // TODO
+    }
+
+    @Override
+    protected <T> ExcelExporter<T> getExporter(File file) throws FileNotFoundException
+    { 
+        return new ExcelExporter<T>(file);
     }
 }
