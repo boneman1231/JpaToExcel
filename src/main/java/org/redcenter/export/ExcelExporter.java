@@ -27,7 +27,8 @@ import org.redcenter.export.filter.ExcelVo;
 public class ExcelExporter<T> extends AbstractExporter<T> implements IExporter<T>
 {    
     public static final int MAX_ROW_IN_MEM = 100;
-    protected Workbook wb;
+    protected SXSSFWorkbook wb;
+    private boolean isExported = false;
  
     public ExcelExporter(File file) throws FileNotFoundException 
     {
@@ -35,18 +36,35 @@ public class ExcelExporter<T> extends AbstractExporter<T> implements IExporter<T
         wb = new SXSSFWorkbook(MAX_ROW_IN_MEM);
     }
     
+    /**
+     * 
+     * SXSSFWorkbook.write() fails when called more than once
+     * The Excel file formats (.xls and .xlsx) are not appendable file formats. 
+     * 
+     * http://stackoverflow.com/questions/31993679/
+     * https://bz.apache.org/bugzilla/show_bug.cgi?id=53515
+     */
     @Override
     protected void export(List<T> records, boolean includeHeader, ExcelVo vo)
             throws IOException, IllegalArgumentException, IllegalAccessException
     {
+        if (isExported)
+        {
+            throw new IOException("export() can only be called onece.");
+        }
+        
         // create sheet 
         String sheetName = vo.getSheetName();
         if (sheetName == null || sheetName.isEmpty())
         {
             Class<?> clazz = records.get(0).getClass();
             sheetName = clazz.getSimpleName();
+        }        
+        Sheet sheet = wb.getSheet(sheetName);
+        if (sheet == null)
+        {
+            sheet = wb.createSheet(sheetName);
         }
-        Sheet sheet = wb.createSheet(sheetName);
 
         // create header with bold font
         if (includeHeader)
@@ -59,6 +77,7 @@ public class ExcelExporter<T> extends AbstractExporter<T> implements IExporter<T
 
         // write to file
         wb.write(os);
+        isExported = true;
     }
 
     private void createHeader(Sheet sheet)
@@ -102,7 +121,8 @@ public class ExcelExporter<T> extends AbstractExporter<T> implements IExporter<T
 
     public void close() throws IOException
     {
-        wb.close();
-        super.close();
+        super.close(); // close stream
+//        wb.close();
+        wb.dispose();   // include wb.close() and delete temp file
     }
 }

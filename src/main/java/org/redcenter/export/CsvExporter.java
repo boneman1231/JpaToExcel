@@ -1,5 +1,6 @@
 package org.redcenter.export;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,12 +19,15 @@ import org.redcenter.export.filter.ExcelVo;
  */
 public class CsvExporter<T> extends AbstractExporter<T> implements IExporter<T>
 {
+    public static final int MAX_ROW_IN_MEM = 100;
     public static final String NEW_LINE = "\r\n";
-    public static final String SEPARATOR = ",";
+    public static final String SEPARATOR = ",";    
+    private BufferedOutputStream bos;
 
     public CsvExporter(File file) throws FileNotFoundException
     {
         super(file);
+        bos = new BufferedOutputStream(os, MAX_ROW_IN_MEM * 1024);
     }
 
     @Override
@@ -41,8 +45,9 @@ public class CsvExporter<T> extends AbstractExporter<T> implements IExporter<T>
         // create values
         createValue(records, sb);
 
-        // write to file        
-        os.write(sb.toString().getBytes());
+        // write to file
+        bos.write(sb.toString().getBytes());
+        bos.flush();
     }
 
     private void createHeader(StringBuilder sb)
@@ -73,5 +78,11 @@ public class CsvExporter<T> extends AbstractExporter<T> implements IExporter<T>
             sb.append(NEW_LINE);
             line++;
         }
+    }
+    
+    public void close() throws IOException
+    {
+        bos.close();
+        super.close();
     }
 }

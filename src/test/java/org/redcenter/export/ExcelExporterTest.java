@@ -11,6 +11,7 @@ public class ExcelExporterTest extends ExporterTest
 {
     private static final String TEST_JPA_FILE_NAME = "testJpa.xlsx";
     private static final String TEST_CUST_FILE_NAME = "testCust.xlsx";
+    private static final String TEST_CUST_MASS_FILE_NAME = "testCustMass.xlsx";
     
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -21,6 +22,7 @@ public class ExcelExporterTest extends ExporterTest
     @Test
     public void testJpaExport() throws IllegalArgumentException, IllegalAccessException, IOException
     {
+        // TODO check content
         // Assert.fail("Not yet implemented");
         testJpaExport(TEST_JPA_FILE_NAME);
     }
@@ -28,19 +30,23 @@ public class ExcelExporterTest extends ExporterTest
     @Test
     public void testCustExport() throws IllegalArgumentException, IllegalAccessException, IOException
     {
+        // TODO check content
         // Assert.fail("Not yet implemented");
         testCustExport(TEST_CUST_FILE_NAME);
     } 
 
     @Test
-    public void testExoprtWithMassData()
+    public void testExoprtWithMassData() throws IllegalArgumentException, IllegalAccessException, IOException
     {
-        // TODO
+        exportMass(TEST_CUST_MASS_FILE_NAME, 1000, ExcelExporter.MAX_ROW_IN_MEM);
+        
+        // TODO check content without traverse whole file
+        System.out.println("End");
     }
 
     @Override
     protected <T> ExcelExporter<T> getExporter(File file) throws FileNotFoundException
-    { 
+    {  
         return new ExcelExporter<T>(file);
     }
 }

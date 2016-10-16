@@ -1,12 +1,9 @@
 package org.redcenter.export.entity;
 
-import javax.persistence.Entity;
-
 import org.redcenter.export.annotation.ExcelColumn;
 import org.redcenter.export.annotation.ExcelSheet;
 
 @ExcelSheet
-@Entity
 public class CustEntity
 {
     @ExcelColumn(order = 2)

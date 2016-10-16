@@ -16,12 +16,14 @@ public class CsvExporterTest extends ExporterTest
 {
     private static final String TEST_JPA_FILE_NAME = "testJpa.csv";
     private static final String TEST_CUST_FILE_NAME = "testCust.csv";
+    private static final String TEST_CUST_MASS_FILE_NAME = "testCustMass.csv";
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception
     {
         new File(TEST_JPA_FILE_NAME).deleteOnExit();
         new File(TEST_CUST_FILE_NAME).deleteOnExit();
+        new File(TEST_CUST_MASS_FILE_NAME).deleteOnExit();
     }
 
     @Test
@@ -47,9 +49,14 @@ public class CsvExporterTest extends ExporterTest
     }
 
     @Test
-    public void testExoprtWithMassData()
+    public void testExoprtWithMassData() throws IllegalArgumentException, IllegalAccessException, IOException
     {
-        // TODO
+        exportMass(TEST_CUST_MASS_FILE_NAME, 1000, CsvExporter.MAX_ROW_IN_MEM);
+         
+        // TODO check content without traverse whole file
+        Map<String, String[]> map = readCsv(TEST_CUST_MASS_FILE_NAME);
+        Assert.assertArrayEquals(getCustHeader(), map.get("HEADER"));
+        Assert.assertArrayEquals(getCustContent(), map.get("CONTENT"));
     }
 
     private Map<String, String[]> readCsv(String fileName) throws FileNotFoundException, IOException
