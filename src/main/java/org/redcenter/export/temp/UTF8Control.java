@@ -10,8 +10,21 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
 
+/**
+ * The Class UTF8Control.
+ */
 public class UTF8Control extends Control
 {
+
+    /** The Constant CHARSET_UTF_8. */
+    public static final String CHARSET_UTF_8 = "UTF-8";
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.util.ResourceBundle.Control#newBundle(java.lang.String,
+     * java.util.Locale, java.lang.String, java.lang.ClassLoader, boolean)
+     */
     public ResourceBundle newBundle(String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
             throws IllegalAccessException, InstantiationException, IOException
     {
@@ -43,7 +56,7 @@ public class UTF8Control extends Control
             {
                 // Only this line is changed to make it to read properties files
                 // as UTF-8.
-                bundle = new PropertyResourceBundle(new InputStreamReader(stream, "UTF-8"));
+                bundle = new PropertyResourceBundle(new InputStreamReader(stream, CHARSET_UTF_8));
             }
             finally
             {
